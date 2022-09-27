@@ -1,0 +1,34 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+li {
+    border: 1px solid black;
+    list-style: none;
+    margin: 8px;
+}
+
+div {
+    border: 1px solid black;
+}
+
+#main-ui {
+    width: 500px;
+    position: absolute;
+    background-color: white;
+}
+
+#left-section,
+#right-section {
+    width: 50%;
+}
+
+#wrapper {
+    display: flex;
+    justify-content: center;
+}

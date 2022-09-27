@@ -1,0 +1,10 @@
+{
+  "name": "logseq-wikipedia-search",
+  "version": "0.0.1",
+  "main": "index.html",
+  "logseq": {
+    "title": "lorem ipsum",
+    "icon": "logseq.jpg",
+    "id": "_0wgdf6u29"
+  }
+}
