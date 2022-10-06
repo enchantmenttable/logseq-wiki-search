@@ -84,7 +84,7 @@ function clearCurrentContext() {
 body.addEventListener("click", e => {
     if (e.target === body) {
         e.stopPropagation();
-        closeModal()
+        closeModal();
     }
 })
 
@@ -282,7 +282,6 @@ document.addEventListener("keyup", e => {
                 };
                 break;
             case "ArrowUp":
-                console.log("allItems length", allItems.length);
                 e.preventDefault();
                 if (currentIndex === 0) {
                     currentIndex = allItems.length - 1;
@@ -297,6 +296,7 @@ document.addEventListener("keyup", e => {
                 };
                 break;
             case "ArrowRight":
+                e.preventDefault();
                 [copyButton, blockButton, pageButton] = getCurrentButtons();
 
                 for (const button of [copyButton, blockButton, pageButton]) {
@@ -316,6 +316,7 @@ document.addEventListener("keyup", e => {
                 
                 break;
             case "ArrowLeft":
+                e.preventDefault();
                 [copyButton, blockButton, pageButton] = getCurrentButtons();
 
                 for (const button of [copyButton, blockButton, pageButton]) {
