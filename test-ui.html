@@ -6,110 +6,126 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        li {
-            border: 1px solid black;
-            list-style: none;
-        }
-
-        div {
-            border: 1px solid black;
-        }
-
-        #left-section,
-        #right-section {
-            width: 50%;
-        }
-
-        #wrapper {
-            display: flex;
-            justify-content: center;
-        }
-    </style>
+    <link rel="stylesheet" href="test-ui.css">
 </head>
 
 <body>
     <input type="search" id="search-bar">
-    <div id="wrapper">
+    <div id="result-wrapper">
         <div id="left-section">
             <nav>
                 <ul>
+                    <li>Solar</li>
+                    <li>Solar power</li>
+                    <li>Solaris</li>
                 </ul>
             </nav>
         </div>
         <div id="right-section">
-
+            <div>
+                <p>Content</p>
+                <div class="button-container">
+                    <button>Block</button>
+                    <button>Page</button>
+                </div>
+            </div>
+            <div>
+                <p>Content</p>
+                <div class="button-container">
+                    <button>Block</button>
+                    <button>Page</button>
+                </div>
+            </div>
+            <div>
+                <p>Content</p>
+                <div class="button-container">
+                    <button>Block</button>
+                    <button>Page</button>
+                </div>
+            </div>
         </div>
     </div>
+    </div>
+    </div>
     <script>
-        const listItems = document.querySelector("#left-section > nav > ul");
-        const rightSection = document.getElementById("right-section");
-        const searchBar = document.getElementById("search-bar");
+        // const listItems = document.querySelector("#left-section > nav > ul");
+        // const rightSection = document.getElementById("right-section");
+        // const searchBar = document.getElementById("search-bar");
 
-        function clearItems() {
-            while (listItems.firstChild) {
-                listItems.removeChild(listItems.lastChild);
-            };
+        // function updateUI(data) {
+        //     while (listItems.firstChild) {
+        //         listItems.removeChild(listItems.lastChild)
+        //     };
 
-            while (rightSection.firstChild) {
-                rightSection.removeChild(rightSection.lastChild);
-            };
-        }
-        
-        function delay(func, time) {
-            let timer = 0;
-            return function(...args) {
-                clearTimeout(timer);
-                timer = setTimeout(func.bind(this, ...args), time || 0)
-            }
-        }
+        //     while (rightSection.firstChild) {
+        //         rightSection.removeChild(rightSection.lastChild)
+        //     };
 
-        searchBar.addEventListener("keyup", delay(function (e) {
-            updateItems(searchBar.value);
-        }, 250));
+        //     for (const page of data) {
+        //         listItems.insertAdjacentHTML("beforeend", 
+        //         `<li data-page-id="${page.id}">${page.title}</li>`);
 
-        function updateItems(keyword) {
-            const searchUrl = `https://en.wikipedia.org/w/rest.php/v1/search/page?q=${keyword}&limit=5`;
+        //         rightSection.insertAdjacentHTML("beforeend",
+        //         `<div data-page-id="${page.id}">
+        //             <p>${page.summary}</p>
+        //             <button>Insert</button>
+        //         </div>`);
+        //     };
 
-            //https://en.wikipedia.org/api/rest_v1/page/summary/
+        //     for (const item of listItems.querySelectorAll("li")) {
+        //         item.addEventListener("mouseover", () => {
+        //             console.log("rightsection children", rightSection.childNodes)
+        //             console.log("right", rightSection.querySelectorAll("div"))
+        //             for (const elem of rightSection.querySelectorAll("div")) {
+        //                 if (elem.dataset.pageId !== item.dataset.pageId) {
+        //                     elem.classList.add("hide")
+        //                     elem.classList.remove("show");
+        //                 } else {
+        //                     elem.classList.add("show");
+        //                     elem.classList.remove("hide");
+        //                 }
+        //             }
+        //         })
+        //     }
+        // }
 
-            fetch(searchUrl)
-                .then(res => res.json())
-                .then(data => {
-                    updateItemTitle(data)
-                })
-        };
+        // function delay(func, time) {
+        //     let timer = 0;
+        //     return function (...args) {
+        //         clearTimeout(timer);
+        //         timer = setTimeout(func.bind(this, ...args), time || 0)
+        //     }
+        // }
 
-        function updateItemContent(url) {
-            return fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    rightSection.insertAdjacentHTML("beforeend",
-                        `<p style="display:none">${data.extract}</p>`);
+        // searchBar.addEventListener("keyup", delay(async function (e) {
+        //     const data = await getFullData(searchBar.value);
+        //     updateUI(data);
+        // }, 250));
 
-                    const lastItem = listItems.lastChild;
-                    const lastItemContent = rightSection.lastChild;
+        // async function getSummary(key) {
+        //     const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${key}`
+        //     return fetch(url)
+        //         .then(res => res.json())
+        //         .then(data => data.extract)
+        // };
 
-                    lastItem.addEventListener("mouseover", () => {
-                        lastItemContent.style.display = "block";
-                    });
-                    lastItem.addEventListener("mouseout", () => {
-                        lastItemContent.style.display = "none";
-                    })
-                })
-        }
+        // async function getContext(url) {
+        //     return fetch(url)
+        //         .then(res => res.json())
+        //         .then(data => data)
+        // }
 
-        async function updateItemTitle(data) {
-            clearItems();
-            
-            for (const entry of data.pages) {
-                listItems.insertAdjacentHTML("beforeend", `<li>${entry.title}</li>`);
+        // async function getFullData(keyword) {
+        //     const url = `https://en.wikipedia.org/w/rest.php/v1/search/page?q=${keyword}&limit=5`;
+        //     const rawData = await getContext(url);
 
-                const summaryUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${entry.key}`;
+        //     for (const page of rawData.pages) {
+        //         page.summary = await getSummary(page.key)
+        //     };
 
-                await updateItemContent(summaryUrl);
-            }
-        }
+        //     return rawData.pages
+        // }
+
 
     </script>
 </body>

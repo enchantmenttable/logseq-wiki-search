@@ -1,10 +1,10 @@
 {
-  "name": "logseq-wikipedia-search",
+  "name": "logseq-search-wikipedia",
   "version": "0.0.1",
   "main": "index.html",
   "logseq": {
-    "title": "lorem ipsum",
-    "icon": "logseq.jpg",
+    "title": "Search Wikipedia",
+    "icon": "Wikipedia-logo-v2.png",
     "id": "_0wgdf6u29"
   }
 }

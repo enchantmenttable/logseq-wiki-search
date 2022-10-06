@@ -1,0 +1,30 @@
+li {
+    border: 1px solid black;
+    list-style: none;
+}
+
+div {
+    border: 1px solid black;
+}
+
+#left-section,
+#right-section {
+    width: 50%;
+}
+
+#result-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+.button-container {
+    
+}
