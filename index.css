@@ -46,6 +46,7 @@ body {
     padding: 0;
     width: 100vh;
     height: 100vh;
+    overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
 }
