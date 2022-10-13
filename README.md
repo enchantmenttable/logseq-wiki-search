@@ -2,6 +2,8 @@
 
 A plugin for [Logseq](https://logseq.com/). Search Wikipedia and add the content as a block or a page.
 
+You can navigate using arrow keys (besides the mouse). Press "f" to focus on the search bar.
+
 ## Screenshots
 
 **1**
