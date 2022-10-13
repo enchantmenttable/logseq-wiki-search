@@ -19,7 +19,7 @@ searchBar.addEventListener("keyup", delay(async function (e) {
         currentIndex = -1;
         renderUI(data);
     }
-}, 180));
+}, 150));
 
 function main() {
     logseq.Editor.registerSlashCommand(
@@ -81,9 +81,8 @@ function clearCurrentContext() {
     currentIndex = -1;
 }
 
-body.addEventListener("click", e => {
-    if (e.target === body) {
-        e.stopPropagation();
+window.addEventListener("click", e => {
+    if (e.target.closest("#main-ui") === null) {
         closeModal();
     }
 })
@@ -92,23 +91,22 @@ body.addEventListener("click", e => {
 
 // insert
 async function insertBlockCustomized(title, content) {
-    const targetBlock = await logseq.Editor.getCurrentBlock();
+    const currentBlock = await logseq.Editor.getCurrentBlock();
     const insertContent = `${title}: ${content}`
-    await logseq.Editor.insertBlock(targetBlock.uuid, insertContent);
+    if (currentBlock.content != "") {
+        await logseq.Editor.insertBlock(currentBlock.uuid, insertContent, {sibling: true});
+    } else {
+        await logseq.Editor.updateBlock(currentBlock.uuid, insertContent);
+    }
 }
 
 async function insertPage(pageName, content) {
     await logseq.Editor.insertAtEditingCursor(`[[${pageName}]]`)
 
-    await createPageCustomized(pageName);
-
-    const targetBlock = await getLastBlock(pageName);
-    if (targetBlock) {
-        await logseq.Editor.updateBlock(targetBlock.uuid, content);
-    }
+    await createPageCustomized(pageName, content);
 }
 
-async function createPageCustomized(pageName) {
+async function createPageCustomized(pageName, content) {
     let page = await logseq.Editor.getPage(pageName);
 
     if (!page) {
@@ -120,6 +118,11 @@ async function createPageCustomized(pageName) {
                 redirect: false,
             }
         );
+
+        const targetBlock = await getLastBlock(pageName);
+        if (targetBlock) {
+            await logseq.Editor.updateBlock(targetBlock.uuid, content);
+        }
     } else {
         console.log("bruh");
         const lastBlock = await getLastBlock(pageName);
@@ -133,7 +136,12 @@ async function createPageCustomized(pageName) {
                     redirect: false,
                 }
             );
-        }
+
+            const targetBlock = await getLastBlock(pageName);
+            if (targetBlock) {
+                await logseq.Editor.updateBlock(targetBlock.uuid, content);
+            }
+        } 
     }
 }
 
@@ -163,7 +171,7 @@ async function getContext(url) {
 }
 
 async function getFullData(keyword) {
-    const url = `https://en.wikipedia.org/w/rest.php/v1/search/page?q=${keyword}&limit=5`;
+    const url = `https://en.wikipedia.org/w/rest.php/v1/search/page?q=${keyword}&limit=8`;
     const rawData = await getContext(url);
 
     for (const page of rawData.pages) {
@@ -217,7 +225,6 @@ function renderUI(data) {
         });
     }
 
-
     // button events
     for (const elem of rightSection.querySelectorAll("div.page-content-container")) {
         const title = elem.dataset.pageTitle;
@@ -250,7 +257,7 @@ function renderUI(data) {
     }
 }
 
-// arrow navigation
+// arrow navigation and keyboard events
 
 function getCurrentButtons() {
     const currentButtonContainer = document.querySelector("div.page-content-container.show").querySelector(".button-container");
@@ -264,11 +271,12 @@ function getCurrentButtons() {
 
 document.addEventListener("keyup", e => {
     if (["ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp"].includes(e.key)) {
+        e.preventDefault();
+        e.stopPropagation();
         const allItems = listItems.querySelectorAll("li");
 
         switch (e.key) {
             case "ArrowDown":
-                e.preventDefault();
                 if (currentIndex === allItems.length - 1) {
                     currentIndex = 0;
                 } else {
@@ -282,7 +290,6 @@ document.addEventListener("keyup", e => {
                 };
                 break;
             case "ArrowUp":
-                e.preventDefault();
                 if (currentIndex === 0) {
                     currentIndex = allItems.length - 1;
                 } else {
@@ -296,7 +303,6 @@ document.addEventListener("keyup", e => {
                 };
                 break;
             case "ArrowRight":
-                e.preventDefault();
                 [copyButton, blockButton, pageButton] = getCurrentButtons();
 
                 for (const button of [copyButton, blockButton, pageButton]) {
@@ -316,7 +322,6 @@ document.addEventListener("keyup", e => {
                 
                 break;
             case "ArrowLeft":
-                e.preventDefault();
                 [copyButton, blockButton, pageButton] = getCurrentButtons();
 
                 for (const button of [copyButton, blockButton, pageButton]) {
@@ -332,7 +337,7 @@ document.addEventListener("keyup", e => {
                 }
         }
     }
-})
+});
 
 document.addEventListener("keyup", e => {
     if (e.key === "Enter") {
@@ -341,6 +346,12 @@ document.addEventListener("keyup", e => {
         if ([copyButton, blockButton, pageButton].includes(document.activeElement)) {
             document.activeElement.click();
         }
+    }
+});
+
+window.addEventListener("keydown", e => {
+    if (["ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp"].includes(e.key)) {
+        e.preventDefault();
     }
 })
 

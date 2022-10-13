@@ -62,6 +62,7 @@ body {
     height: 397px;
     position: relative;
     border-radius: 14px;
+    margin: 0;
 }
 
 #main-ui {
@@ -106,6 +107,8 @@ body {
 }
 
 #search-bar {
+    margin-top: 2px;
+    margin-bottom: 2px;
     width: 50%;
     height: 24px;
     background-color: var(--content-bg);
@@ -159,6 +162,14 @@ body {
     background-color: var(--hover-menu-bg);
 }
 
+#item-list > li:nth-child(n+9) {
+    display: none;
+}
+
+#item-list > li:last-child {
+    border-bottom: none;
+}
+
 #right-section {
     width: 70%;
 }
@@ -166,7 +177,7 @@ body {
 .right-footer {
     position: sticky;
     width: 100%;
-    top: 6px;
+    top: 8px;
     display: flex;
     justify-content: flex-end;
     padding-right: 12px;
@@ -194,4 +205,5 @@ p.content {
     top: 40px;
     padding-left: 12px;
     padding-right: 12px;
+    padding-top: 2px;
 }
