@@ -5,12 +5,11 @@ const rightSection = document.getElementById("right-section");
 const searchBar = document.getElementById("search-bar");
 const backgroundLayer = document.getElementById("background-layer");
 let currentIndex = -1;
-let currentFocus = "list"; // "content", "none"
+let currentFocus = "list";
 let copyButton, blockButton, pageButton;
 
 const body = document.getElementsByTagName("body")[0];
 const bodyInfo = body.getBoundingClientRect();
-console.log("body dims", bodyInfo.height, bodyInfo.width);
 
 // search bar
 searchBar.addEventListener("keyup", delay(async function (e) {
@@ -21,19 +20,47 @@ searchBar.addEventListener("keyup", delay(async function (e) {
     }
 }, 150));
 
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 function main() {
     logseq.Editor.registerSlashCommand(
         "Search Wikipedia",
         async () => {
-            const { left, top, rect } = await logseq.Editor.getEditingCursorPosition();
-            Object.assign(backgroundLayer.style, {
-                top: top + rect.top + "px",
-                left: left + rect.left + "px",
-            });
+            const { left, rect } = await logseq.Editor.getEditingCursorPosition();
+            console.log("rect", rect)
+            let adjustedLeft = 0, adjustedTop = 0;
+            const padding = 10;
+
             logseq.showMainUI({ autoFocus: true });
+            
             setTimeout(() => {
+                if (rect.x + left + 500 + padding > window.innerWidth) {
+                    adjustedLeft = rect.x + left - 500 - padding;
+                } else {
+                    adjustedLeft = rect.x + left;
+                };
+                
+                if (rect.bottom + 400 + padding > window.innerHeight) {
+                    adjustedTop = rect.y - 400 - padding;
+                } else {
+                    adjustedTop = rect.bottom;
+                };
+                
+                Object.assign(backgroundLayer.style, {
+                    top: adjustedTop + "px",
+                    left: adjustedLeft + "px",
+                });
+
+                // console.log("window w h", window.innerWidth, window.innerHeight)
+                // console.log("left, top", left, top)
+                // console.log("adjusted", adjustedLeft, adjustedTop)
+
+                body.style.visibility = "visible";
+                
                 searchBar.focus();
-            }, 100);
+            }, 80);
 
         }
     )
@@ -58,6 +85,7 @@ document.addEventListener("keyup", e => {
 function closeModal() {
     clearCurrentContext();
     searchBar.value = "";
+    body.style.visibility = "hidden";
     logseq.hideMainUI({ restoreEditingcurrentIndex: true })
 }
 
@@ -94,7 +122,7 @@ async function insertBlockCustomized(title, content) {
     const currentBlock = await logseq.Editor.getCurrentBlock();
     const insertContent = `${title}: ${content}`
     if (currentBlock.content != "") {
-        await logseq.Editor.insertBlock(currentBlock.uuid, insertContent, {sibling: true});
+        await logseq.Editor.insertBlock(currentBlock.uuid, insertContent, { sibling: true });
     } else {
         await logseq.Editor.updateBlock(currentBlock.uuid, insertContent);
     }
@@ -141,7 +169,7 @@ async function createPageCustomized(pageName, content) {
             if (targetBlock) {
                 await logseq.Editor.updateBlock(targetBlock.uuid, content);
             }
-        } 
+        }
     }
 }
 
@@ -235,21 +263,21 @@ function renderUI(data) {
             e.stopPropagation();
             await insertBlockCustomized(title, content);
             closeModal();
-        }, {once: true})
+        }, { once: true })
 
         // insert page
         elem.querySelector("button.insert-page").addEventListener("click", async (e) => {
             e.stopPropagation();
             await insertPage(title, content);
             closeModal();
-        }, {once: true})
+        }, { once: true })
 
         // copy
         elem.querySelector("button.copy").addEventListener("click", async (e) => {
             e.stopPropagation();
             await navigator.clipboard.writeText(`${title}: ${content}`);
             closeModal();
-        }, {once: true})
+        }, { once: true })
 
         for (const button of elem.querySelectorAll("button")) {
             button.addEventListener("mouseover", () => button.focus());
@@ -319,7 +347,7 @@ document.addEventListener("keyup", e => {
                         break;
                     }
                 };
-                
+
                 break;
             case "ArrowLeft":
                 [copyButton, blockButton, pageButton] = getCurrentButtons();
