@@ -1,5 +1,5 @@
 {
-  "name": "logseq-search-wikipedia",
+  "name": "logseq-wiki-search",
   "version": "0.0.1",
   "description": "Search Wikipedia and add the result as a block or a page.",
   "main": "index.html",
