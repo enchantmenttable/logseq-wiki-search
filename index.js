@@ -18,11 +18,7 @@ searchBar.addEventListener("keyup", delay(async function (e) {
         currentIndex = -1;
         renderUI(data);
     }
-}, 150));
-
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
+}, 350));
 
 function main() {
     logseq.Editor.registerSlashCommand(
