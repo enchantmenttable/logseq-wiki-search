@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Search Wikipedia and add the result as a block or a page.",
   "main": "index.html",
+  "targets": {
+    "main": false
+  },
   "scripts": {
     "build": "parcel build --no-source-maps index.html --public-url ./"
   },
