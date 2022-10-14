@@ -3,9 +3,19 @@
   "version": "0.0.1",
   "description": "Search Wikipedia and add the result as a block or a page.",
   "main": "index.html",
+  "scripts": {
+    "build": "parcel build --no-source-maps index.html --public-url ./"
+  },
   "author": "enchantmenttable",
   "logseq": {
     "icon": "./logo.png",
     "id": "_0wgdf6u29"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "parcel-bundler": "^1.12.5"
   }
 }
