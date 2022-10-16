@@ -7,6 +7,7 @@ const backgroundLayer = document.getElementById("background-layer");
 let currentIndex = -1;
 let currentFocus = "list";
 let copyButton, blockButton, pageButton;
+// let searchCount = 0;
 
 const body = document.getElementsByTagName("body")[0];
 const bodyInfo = body.getBoundingClientRect();
@@ -14,18 +15,27 @@ const bodyInfo = body.getBoundingClientRect();
 // search bar
 searchBar.addEventListener("keyup", delay(async function (e) {
     if (!(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key))) {
+        // const startGetFullData = performance.now();
         const data = await getFullData(searchBar.value);
+        // const endGetFullData = performance.now()
         currentIndex = -1;
+        // console.log("getfulldata", endGetFullData - startGetFullData)
+
+        // const startRender = performance.now();
         renderUI(data);
+        // const endRender = performance.now();
+        // console.log("render", endRender - startRender);
+
+        // console.log("search count", searchCount);
+        // searchCount += 1;
     }
-}, 350));
+}, 300));
 
 function main() {
     logseq.Editor.registerSlashCommand(
         "Search Wikipedia",
         async () => {
             const { left, rect } = await logseq.Editor.getEditingCursorPosition();
-            console.log("rect", rect)
             let adjustedLeft = 0, adjustedTop = 0;
             const padding = 10;
 
@@ -49,14 +59,10 @@ function main() {
                     left: adjustedLeft + "px",
                 });
 
-                // console.log("window w h", window.innerWidth, window.innerHeight)
-                // console.log("left, top", left, top)
-                // console.log("adjusted", adjustedLeft, adjustedTop)
-
                 body.style.visibility = "visible";
                 
                 searchBar.focus();
-            }, 80);
+            }, 100);
 
         }
     )
@@ -85,6 +91,7 @@ function closeModal() {
     logseq.hideMainUI({ restoreEditingcurrentIndex: true })
 }
 
+// -delay
 function delay(func, time) {
     let timer = 0;
     return function (...args) {
